@@ -8,10 +8,17 @@ namespace Telega
 {
     static class DataStruct
     {
-        //public  struct UserInfoTelega {
-        //  public string Name { get; set; }
-        //  public string Action { get; set; }
-        //  public string SiteName { get; set; }
-        //}
+        static public List<ItemsInfo> ItemsSearch = new List<ItemsInfo>();
+        static public Queue<ItemsInfo> GoodItems = new Queue<ItemsInfo>();
+        static public Queue<string> ProxyList = new Queue<string>();
+        static public List<string> ProxyListFix = new List<string>();
+
+        public struct DataBots
+        {
+         public  string IdBot { get; set; }
+         public string Site { get; set; }
+        }
+      
+
     }
 }
