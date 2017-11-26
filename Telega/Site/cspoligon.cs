@@ -19,13 +19,16 @@ namespace Telega.Site
         IWebDriver driver;
         int ID = 0;
         dynamic ITEMS;
-        int CountThread = 10;
+        int IndexLog = 0;
+        int CountThread = 20;
         List<System.Net.Cookie> cook;
         List<System.Net.Cookie> cookAll;
         string IP = "";
 
-        public void INI()
+        public void INI(int index)
         {
+            IndexLog = index;
+            SetLogText("-", "-");
             try
             {
                 var driverService = ChromeDriverService.CreateDefaultService();  //скрытие 
@@ -33,6 +36,15 @@ namespace Telega.Site
                 driver = new ChromeDriver(driverService);
                 driver.Navigate().GoToUrl("https://csgopolygon.com/withdraw.php");
 
+                driver.Navigate().GoToUrl("https://csgopolygon.com/?login");
+                var login = driver.FindElement(By.Id("steamAccountName"));
+                login.SendKeys("helpertrader");
+                var pass = driver.FindElement(By.Id("steamPassword"));
+                pass.SendKeys("Bogrinof114");
+                var button = driver.FindElement(By.Id("imageLogin"));
+                button.Click();
+                Thread.Sleep(10000);
+                driver.Navigate().GoToUrl("https://csgopolygon.com/withdraw.php");
                 MessageBox.Show("Введите все данные , после этого программа продолжит работу!");
 
 
@@ -55,13 +67,17 @@ namespace Telega.Site
                         // Get(handler, i);
                         Get(handler, i);
                     }).Start();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
                 start();
             }
             catch (Exception ex) { Program.Mess.Enqueue(ex.Message); }
         }
-
+        private void SetLogText(string _time, string mess)
+        {
+            Program.MessLog[IndexLog].Time = _time;
+            Program.MessLog[IndexLog].Text = mess;
+        }
         public void start()
         {
             //var firstFull = Convert.ToInt32(DateTime.Now.ToString("HHmmss"));
@@ -107,13 +123,14 @@ namespace Telega.Site
                         string responseString = responseContent.ReadAsStringAsync().Result;
                         ITEMS = JsonConvert.DeserializeObject<dynamic>(responseString);
                         ClickItem(ITEMS);
-                        Program.Mess.Enqueue("[Poligon] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + "Завершил загрузку предметов:" + ITEMS.items.Count);
+                        SetLogText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff"), "Завершил загрузку предметов:" + ITEMS.items.Count);
+                      //  Program.Mess.Enqueue("[Poligon] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + "Завершил загрузку предметов:" + ITEMS.items.Count);
                     }
                     
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
 
                 }
-                catch (Exception ex) { Thread.Sleep(1000); Program.Mess.Enqueue("[Poligon]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + ":" + ex.Message); }
+                catch (Exception ex) { /*Thread.Sleep(1000); Program.Mess.Enqueue("[Poligon]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + ":" + ex.Message);*/ }
 
             }
             // return new Data();
@@ -130,11 +147,21 @@ namespace Telega.Site
                         {
                             try
                             {
+                              
                                 if (item.name.Value is String)
                                 {
-                                    if (item.name.Value.ToString().Replace(" ", "") == (it.Name).Replace(" ", "") && DataStruct.GoodItems.Contains(it) == false)
+                                    var priceSite = Convert.ToDouble(item.price.Value.ToString()) / 1000;
+                                    ItemsInfo II = new ItemsInfo()
                                     {
-                                        DataStruct.GoodItems.Enqueue(it);
+                                        Name = it.Name,
+                                        Site = it.Site,
+                                        Price = priceSite.ToString(),
+                                        Floaat = "",
+                                        telegram = it.telegram
+                                    };
+                                    if (Site == it.Site && item.name.Value.ToString().Replace(" ", "") == (it.Name).Replace(" ", "") && DataStruct.GoodItems.Contains(II) == false)
+                                    {
+                                        DataStruct.GoodItems.Enqueue(II);
                                     }
 
                                 }

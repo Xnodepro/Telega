@@ -19,6 +19,7 @@ namespace Telega.Site
         IWebDriver driver;
         int ID = 0;
         Data ITEMS;
+        int IndexLog = 0;
         List<System.Net.Cookie> cook;
         List<System.Net.Cookie> cookAll;
         public struct Data
@@ -35,13 +36,26 @@ namespace Telega.Site
             public double price { get; set; }
 
             public string id { get; set; }
+            public string wear { get; set; }
         }
-       
-        public void INI()
+
+        public void INI(int index)
         {
+            IndexLog = index;
+            SetLogText("-", "-");
             var driverService = ChromeDriverService.CreateDefaultService();  //скрытие 
             driverService.HideCommandPromptWindow = true;                    //консоли
             driver = new ChromeDriver(driverService);
+            driver.Navigate().GoToUrl("https://cstrade.gg/");
+
+            driver.Navigate().GoToUrl("https://cstrade.gg/login_steam");
+            var login = driver.FindElement(By.Id("steamAccountName"));
+            login.SendKeys("helpertrader");
+            var pass = driver.FindElement(By.Id("steamPassword"));
+            pass.SendKeys("Bogrinof114");
+            var button = driver.FindElement(By.Id("imageLogin"));
+            button.Click();
+            Thread.Sleep(10000);
             driver.Navigate().GoToUrl("https://cstrade.gg/");
             MessageBox.Show("Введите все данные , после этого программа продолжит работу!");
 
@@ -64,7 +78,11 @@ namespace Telega.Site
             }
             start();
         }
-
+        private void SetLogText(string _time, string mess)
+        {
+            Program.MessLog[IndexLog].Time = _time;
+            Program.MessLog[IndexLog].Text = mess;
+        }
         public void start()
         {
             
@@ -105,7 +123,8 @@ namespace Telega.Site
                         string responseString = responseContent.ReadAsStringAsync().Result;
                         ITEMS = JsonConvert.DeserializeObject<Data>(responseString);
                         ClickItem(ITEMS);
-                        Program.Mess.Enqueue("[cstrade.gg] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + "Завершил загрузку предметов:" + ITEMS.inventory.Count);
+                        SetLogText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff"), "Завершил загрузку предметов:" + ITEMS.inventory.Count);
+                       // Program.Mess.Enqueue("[cstrade.gg] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + "Завершил загрузку предметов:" + ITEMS.inventory.Count);
                     }
 
                     Random random = new Random();
@@ -120,19 +139,31 @@ namespace Telega.Site
         {
             if (Items.inventory != null)
             {
-                foreach (var item in Items.inventory)
+                try
                 {
-                    foreach (var it in DataStruct.ItemsSearch)
+                    foreach (var item in Items.inventory)
                     {
-
-                        if (Site == it.Site && item.market_hash_name.Replace(" ", "") == (it.Name).Replace(" ", "") && DataStruct.GoodItems.Contains(it) == false)
+                        foreach (var it in DataStruct.ItemsSearch)
                         {
-                        //    Program.Mess.Enqueue("[cstrade.gg]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| Нашел предмет:" + it.Name);
-                            DataStruct.GoodItems.Enqueue(it);
-                        }
-                    }
+                            ItemsInfo II = new ItemsInfo()
+                            {
+                                Name = it.Name,
+                                Site = it.Site,
+                                Price = item.price.ToString(),
+                                Floaat = item.wear.ToString(),
+                                telegram = it.telegram
 
+                            };
+                            if (Site == it.Site && item.market_hash_name.Replace(" ", "") == (it.Name).Replace(" ", "") && DataStruct.GoodItems.Contains(II) == false)
+                            {
+                                //    Program.Mess.Enqueue("[cstrade.gg]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| Нашел предмет:" + it.Name);
+                                DataStruct.GoodItems.Enqueue(II);
+                            }
+                        }
+
+                    }
                 }
+                catch (Exception ex) { }
             }
 
         }

@@ -49,6 +49,9 @@ namespace Telega
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            label1.Text = "Количество прокси:" + DataStruct.ProxyList.Count;
+            label2.Text = "Количество" + DataStruct.GoodItems.Count;
+
             if (Program.Mess.Count > 0)
             {
                 for (int i = 0; i < Program.Mess.Count; i++)
@@ -151,7 +154,11 @@ namespace Telega
             bots.Add(new DataStruct.DataBots { IdBot = "76561198375218541", Site = "loot.farm" });//27
             bots.Add(new DataStruct.DataBots { IdBot = "76561198413200947", Site = "loot.farm" });//29
             bots.Add(new DataStruct.DataBots { IdBot = "76561198412071938", Site = "loot.farm" });//30
+            for (int i = 0; i < 11; i++)
+            {
+                dataGridView1.Rows.Add("","", "", "", "", "");
 
+            }
             StarterBot stBot = new StarterBot(bots);
         }
 
@@ -231,36 +238,21 @@ namespace Telega
 
         private void timer3_Tick(object sender, EventArgs e)
         {
-            label1.Text = "Количество прокси:" + DataStruct.ProxyList.Count;
-            label2.Text = "Количество" + DataStruct.GoodItems.Count ;
-            //if (Program.MessLog.Count > 0)
-            //{
-            //    for (int i = 0; i < Program.MessLog.Count; i++)
-            //    {
-            //        try
-            //        {
-            //            var item = Program.MessLog.Dequeue();
-            //            if (item.Text == "" && item.Error=="")
-            //            {
-            //                dataGridView1.Rows.Add(item.Id, item.Site, item.Time, item.Text, item.Timeerror, item.Error);
-            //            }
-            //            else {
-            //                if (item.Text != "")
-            //                {
-            //                    dataGridView1.Rows[item.Id].Cells["text"].Value = item.Text;
-            //                    dataGridView1.Rows[item.Id].Cells["time"].Value = item.Time;
-            //                }
-            //                if (item.Error != "")
-            //                {
-            //                    dataGridView1.Rows[item.Id].Cells["timeError"].Value = item.Timeerror;
-            //                    dataGridView1.Rows[item.Id].Cells["error"].Value = item.Error;
 
-            //                }
-            //            }
-            //        }
-            //        catch (Exception ex) { }
-            //    }
-            //}
+
+                for (int i = 0; i < Program.MessLog.Count; i++)
+                {
+                    try
+                    {
+                    // var item = Program.MessLog.Dequeue();
+                                dataGridView1.Rows[i].Cells["site"].Value = Program.MessLog[i].Site;
+                                dataGridView1.Rows[i].Cells["text"].Value = Program.MessLog[i].Text;
+                                dataGridView1.Rows[i].Cells["time"].Value = Program.MessLog[i].Time;
+
+                    }
+                    catch (Exception ex) { }
+                }
+            
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)

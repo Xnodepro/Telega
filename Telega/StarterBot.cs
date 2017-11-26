@@ -28,27 +28,81 @@ namespace Telega
         {
             try
             {
-                Site.money Money = new Site.money();//Экзепляр Cstrade.gg
-                new System.Threading.Thread(delegate () { Money.INI(); }).Start(); //Start Cstrade.gg
+                int k = 0;
+                Program.MessLog.Add(new Types.LogInfo { Site = "cs.money" });
+                Site.money Money = new Site.money();
+                new System.Threading.Thread(delegate () { Money.INI(k); }).Start();
 
-                //Site.Loot loot = new Site.Loot();//Экзепляр Loot.Farm
-                //new System.Threading.Thread(delegate () { loot.INI(); }).Start(); //Start Loot.Farm
+                Thread.Sleep(1000);
+                k++;
 
-                //Site.Deals deals = new Site.Deals();//Экзепляр Cs.Deals
-                //new System.Threading.Thread(delegate () { deals.INI(); }).Start(); //Start Cs.Deals
+                Program.MessLog.Add(new Types.LogInfo { Site = "loot.farm" });
+                Site.Loot loot = new Site.Loot();
+                new System.Threading.Thread(delegate () { loot.INI(k); }).Start();
 
-                //Site.tradeskinsfast Tradeskinsfast = new Site.tradeskinsfast();//Экзепляр tradeskinsfast.com
-                //new System.Threading.Thread(delegate () { Tradeskinsfast.INI(); }).Start(); //Start tradeskinsfast.com
+                Thread.Sleep(1000);
+                k++;
 
-                //Site.cstrade Cstrade = new Site.cstrade();
-                //new System.Threading.Thread(delegate () { Cstrade.INI(); }).Start();
+                Program.MessLog.Add(new Types.LogInfo { Site = "cs.deals" });
+                Site.Deals deals = new Site.Deals();
+                new System.Threading.Thread(delegate () { deals.INI(k); }).Start();
 
-                //Site.csgosell Csgosell = new Site.csgosell();//Экзепляр Cstrade.gg
-                //new System.Threading.Thread(delegate () { Csgosell.INI(); }).Start(); //Start Cstrade.gg
+                Thread.Sleep(1000);
+                k++;
 
-                //Site.cspoligon Poligon = new Site.cspoligon();
-                //new System.Threading.Thread(delegate () { Poligon.INI(); }).Start();
+                Program.MessLog.Add(new Types.LogInfo { Site = "tradeskinsfast.com" });
+                Site.tradeskinsfast Tradeskinsfast = new Site.tradeskinsfast();
+                new System.Threading.Thread(delegate () { Tradeskinsfast.INI(k); }).Start();
 
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "cstrade.gg" });
+                Site.cstrade Cstrade = new Site.cstrade();
+                new System.Threading.Thread(delegate () { Cstrade.INI(k); }).Start();
+
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "csgosell.com" });
+                Site.csgosell Csgosell = new Site.csgosell();
+                new System.Threading.Thread(delegate () { Csgosell.INI(k); }).Start();
+
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "csgopolygon.com" });
+                Site.cspoligon Poligon = new Site.cspoligon();
+                new System.Threading.Thread(delegate () { Poligon.INI(k); }).Start();
+
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "skin.trade" });
+                Site.skintrade SkinTrade = new Site.skintrade();
+                new System.Threading.Thread(delegate () { SkinTrade.INI(k); }).Start();
+
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "trade-skins.com" });
+                Site.trade_skins Trade_Skins = new Site.trade_skins();
+                new System.Threading.Thread(delegate () { Trade_Skins.INI(k); }).Start();
+
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "csoffer.me" });
+                Site.csofferme CsOfferMe = new Site.csofferme();
+                new System.Threading.Thread(delegate () { CsOfferMe.INI(k); }).Start();
+
+                Thread.Sleep(1000);
+                k++;
+
+                Program.MessLog.Add(new Types.LogInfo { Site = "skinsjar.com" });
+                Site.skinjar SkinJar = new Site.skinjar();
+                new System.Threading.Thread(delegate () { SkinJar.INI(k); }).Start();
+                //csoffer.me
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

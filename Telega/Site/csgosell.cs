@@ -19,6 +19,7 @@ namespace Telega.Site
         IWebDriver driver;
         int ID = 0;
         List<Data> ITEMS;
+        int IndexLog = 0;
         List<System.Net.Cookie> cook;
         List<System.Net.Cookie> cookAll;
 
@@ -27,19 +28,33 @@ namespace Telega.Site
             //    public List<inData> response { get; set; }
             public string h { get; set; }
             public double p { get; set; }
+            public string f { get; set; }
         }
         public struct inData
         {
 
             public string h { get; set; }
+           
             public double p { get; set; }
 
         }
-        public void INI()
+        public void INI(int index)
         {
+            IndexLog = index;
+            SetLogText("-", "-");
             var driverService = ChromeDriverService.CreateDefaultService();  //скрытие 
             driverService.HideCommandPromptWindow = true;                    //консоли
             driver = new ChromeDriver(driverService);
+            driver.Navigate().GoToUrl("https://csgosell.com/");
+
+            driver.Navigate().GoToUrl("https://csgosell.com?login");
+            var login = driver.FindElement(By.Id("steamAccountName"));
+            login.SendKeys("helpertrader");
+            var pass = driver.FindElement(By.Id("steamPassword"));
+            pass.SendKeys("Bogrinof114");
+            var button = driver.FindElement(By.Id("imageLogin"));
+            button.Click();
+            Thread.Sleep(10000);
             driver.Navigate().GoToUrl("https://csgosell.com/");
             MessageBox.Show("Введите все данные , после этого программа продолжит работу!");
 
@@ -52,7 +67,7 @@ namespace Telega.Site
             }
 
 
-            for (int i = 0; i <8 ; i++)
+            for (int i = 0; i < 8; i++)
             {
                 new System.Threading.Thread(delegate () {
                     Get(handler, i);
@@ -62,7 +77,11 @@ namespace Telega.Site
             }
             start();
         }
-
+        private void SetLogText(string _time, string mess)
+        {
+            Program.MessLog[IndexLog].Time = _time;
+            Program.MessLog[IndexLog].Text = mess;
+        }
         public void start()
         {
 
@@ -70,25 +89,62 @@ namespace Telega.Site
             //{
             //    try
             //    {
-                   
+
 
             //        Thread.Sleep(200);
             //    }
             //    catch (Exception ex) { }
             //}
         }
+        public HttpClient Prox(HttpClient client1, HttpClientHandler handler, string paroxyu)
+        {
+
+            HttpClient client = client1;
+            try
+            {
+                string
+                httpUserName = "webminidead",
+                httpPassword = "159357Qq";
+                string proxyUri = paroxyu;
+                NetworkCredential proxyCreds = new NetworkCredential(
+                    httpUserName,
+                    httpPassword
+                );
+                WebProxy proxy = new WebProxy(proxyUri, false)
+                {
+                    UseDefaultCredentials = false,
+                    Credentials = proxyCreds,
+                };
+                try
+                {
+                    handler.Proxy = null;
+                    handler.Proxy = proxy;
+                    handler.PreAuthenticate = true;
+                    handler.UseDefaultCredentials = false;
+                    handler.Credentials = new NetworkCredential(httpUserName, httpPassword);
+                    handler.AllowAutoRedirect = true;
+                }
+                catch (Exception ex) { }
+                client = new HttpClient(handler);
+            }
+            catch (Exception ex) { }
+            return client;
+        }
         private void Get(HttpClientHandler handler, int id)
         {
             HttpClientHandler handler1 = handler;
-            HttpClient client = null;
-
 
             while (true)
             {
                 try
                 {
-                    client = new HttpClient(handler1);
-                    client.Timeout = TimeSpan.FromSeconds(30);
+                    string newProxy = DataStruct.ProxyList.Dequeue();
+                    HttpClient client = null;
+                    HttpClientHandler handler2 = new HttpClientHandler();
+                    handler2.CookieContainer = handler1.CookieContainer;
+                    handler2.Proxy = null;
+                    client = Prox(client, handler2, newProxy);// new HttpClient(handler1);
+                    client.Timeout = TimeSpan.FromSeconds(60);
                     client.DefaultRequestHeaders.Add("User-Agent",
          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36");
                     client.DefaultRequestHeaders.Add("Accept", "*/*");
@@ -103,15 +159,17 @@ namespace Telega.Site
                         var responseContent = response.Content;
                         string responseString = responseContent.ReadAsStringAsync().Result;
                         ITEMS = JsonConvert.DeserializeObject<List<Data>>(responseString);
+                       // Program.Mess.Enqueue("[cs.deals]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|0");
                         ClickItem(ITEMS);
-                        Program.Mess.Enqueue("["+Site+"] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + "Завершил загрузку предметов:" + ITEMS.Count);
+                        SetLogText(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff"), "Завершил загрузку предметов:" + ITEMS.Count);
+                       // Program.Mess.Enqueue("[" + Site + "] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + "Завершил загрузку предметов:" + ITEMS.Count);
                     }
 
                     Random random = new Random();
 
                     Thread.Sleep(300);
                 }
-                catch (Exception ex) {/* Program.MessCsTrade.Enqueue("БОТ[" + id + "] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + ":" + ex.Message);*/ }
+                catch (Exception ex) { /*Program.Mess.Enqueue("БОТ[" + id + "] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "|" + ":" + ex.Message);*/ }
             }
             // return new Data();
         }
@@ -119,6 +177,7 @@ namespace Telega.Site
         {
             try
             {
+               // Program.Mess.Enqueue("[cs.deals]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| 1");
                 if (Items != null)
                 {
                     foreach (var item in Items)
@@ -127,21 +186,30 @@ namespace Telega.Site
                         {
                             try
                             {
-                                    if (Site == it.Site && item.h.ToString().Replace(" ", "") == it.Name.Replace(" ", "") && DataStruct.GoodItems.Contains(it) == false)
-                                    {
-                                        //      Program.Mess.Enqueue("[tradeskinsfast.com]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| Нашел предмет:" + it.Name);
-                                        DataStruct.GoodItems.Enqueue(it);
-                                    }
-                                
+                                ItemsInfo II = new ItemsInfo()
+                                {
+                                    Name = it.Name,
+                                    Site = it.Site,
+                                    Price = item.p.ToString(),
+                                    Floaat = item.f.ToString(),
+                                    telegram = it.telegram
+                                };
+                                if (Site == it.Site && item.h.Replace(" ", "") == (it.Name).Replace(" ", "") && DataStruct.GoodItems.Contains(II) == false)
+                                {
+                                    // Program.Mess.Enqueue("[tradeskinsfast.com]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| Нашел предмет:" + it.Name);
+                                    DataStruct.GoodItems.Enqueue(II);
+                                }
+
                             }
                             catch (Exception ex)
                             {
-                                //  Program.MessDeals.Enqueue("БОТ[" + ID + "] " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| :" +ex.Message);
+
                             }
                         }
 
                     }
                 }
+               // Program.Mess.Enqueue("[cs.deals]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "| 2");
             }
             catch (Exception ex) { }
 

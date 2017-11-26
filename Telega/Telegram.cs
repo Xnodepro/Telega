@@ -131,6 +131,17 @@ namespace Telega
                       new [] // last row
                       {
                         new KeyboardButton("[csgopolygon.com]"),
+                        new KeyboardButton("[skin.trade]")
+                      },
+                      new [] // last row
+                      {
+                        new KeyboardButton("[trade-skins.com]"),
+                        new KeyboardButton("[csoffer.me]")
+                      },
+                      new [] // last row
+                      {
+                        new KeyboardButton("[skinsjar.com]"),
+
                       }
 
                     });
@@ -170,6 +181,17 @@ namespace Telega
                       new [] // last row
                       {
                         new KeyboardButton("[csgopolygon.com]"),
+                        new KeyboardButton("[skin.trade]")
+                      },
+                      new [] // last row
+                      {
+                        new KeyboardButton("[trade-skins.com]"),
+                        new KeyboardButton("[csoffer.me]")
+                      },
+                      new [] // last row
+                      {
+                        new KeyboardButton("[skinsjar.com]"),
+                       
                       }
 
                 });
@@ -384,7 +406,122 @@ namespace Telega
                                     await Bot.SendTextMessageAsync(message.Chat.Id, "Введите название предмета начиная  с *", replyMarkup: keyboard);
                                 }
                             } break;
+                        case "[skin.trade]":{
+                                SetSiteName(message.From.Username, "skin.trade");
+                                if (GetAction(message.From.Username) == "Remove")
+                                {
+                                    var count = GetToRemove(message.From.Username, "skin.trade");
+                                    KeyboardButton[][] keys = new KeyboardButton[count.Count + 1][];
+                                    int p = 1;
+                                    keys[0] = new KeyboardButton[] { "Меню", };
+                                    foreach (var item in count)
+                                    {
+                                        keys[p] = new KeyboardButton[] { "*" + item.Name, };
+                                        p++;
+                                    }
+                                    var keyboard = new ReplyKeyboardMarkup(keys);
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Выбран Сайт" + message.Text, replyMarkup: keyboard);
+                                }
+                                else
+                                {
+                                    var keyboard = new ReplyKeyboardMarkup(new[]
+                                    {
+                                        new [] // first row
+                                        {
+                                          new KeyboardButton("Меню"),
+                                        }
 
+                                    });
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Введите название предмета начиная  с *", replyMarkup: keyboard);
+                                }
+                            } break;
+                        case "[trade-skins.com]":{
+                                SetSiteName(message.From.Username, "trade-skins.com");
+                                if (GetAction(message.From.Username) == "Remove")
+                                {
+                                    var count = GetToRemove(message.From.Username, "trade-skins.com");
+                                    KeyboardButton[][] keys = new KeyboardButton[count.Count + 1][];
+                                    int p = 1;
+                                    keys[0] = new KeyboardButton[] { "Меню", };
+                                    foreach (var item in count)
+                                    {
+                                        keys[p] = new KeyboardButton[] { "*" + item.Name, };
+                                        p++;
+                                    }
+                                    var keyboard = new ReplyKeyboardMarkup(keys);
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Выбран Сайт" + message.Text, replyMarkup: keyboard);
+                                }
+                                else
+                                {
+                                    var keyboard = new ReplyKeyboardMarkup(new[]
+                                    {
+                                        new [] // first row
+                                        {
+                                          new KeyboardButton("Меню"),
+                                        }
+
+                                    });
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Введите название предмета начиная  с *", replyMarkup: keyboard);
+                                }
+                            } break;
+                        case "[csoffer.me]": {
+                                SetSiteName(message.From.Username, "csoffer.me");
+                                if (GetAction(message.From.Username) == "Remove")
+                                {
+                                    var count = GetToRemove(message.From.Username, "csoffer.me");
+                                    KeyboardButton[][] keys = new KeyboardButton[count.Count + 1][];
+                                    int p = 1;
+                                    keys[0] = new KeyboardButton[] { "Меню", };
+                                    foreach (var item in count)
+                                    {
+                                        keys[p] = new KeyboardButton[] { "*" + item.Name, };
+                                        p++;
+                                    }
+                                    var keyboard = new ReplyKeyboardMarkup(keys);
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Выбран Сайт" + message.Text, replyMarkup: keyboard);
+                                }
+                                else
+                                {
+                                    var keyboard = new ReplyKeyboardMarkup(new[]
+                                    {
+                                        new [] // first row
+                                        {
+                                          new KeyboardButton("Меню"),
+                                        }
+
+                                    });
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Введите название предмета начиная  с *", replyMarkup: keyboard);
+                                }
+                            } break;
+                        case "[skinsjar.com]":{
+                                SetSiteName(message.From.Username, "skinsjar.com");
+                                if (GetAction(message.From.Username) == "Remove")
+                                {
+                                    var count = GetToRemove(message.From.Username, "skinsjar.com");
+                                    KeyboardButton[][] keys = new KeyboardButton[count.Count + 1][];
+                                    int p = 1;
+                                    keys[0] = new KeyboardButton[] { "Меню", };
+                                    foreach (var item in count)
+                                    {
+                                        keys[p] = new KeyboardButton[] { "*" + item.Name, };
+                                        p++;
+                                    }
+                                    var keyboard = new ReplyKeyboardMarkup(keys);
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Выбран Сайт" + message.Text, replyMarkup: keyboard);
+                                }
+                                else
+                                {
+                                    var keyboard = new ReplyKeyboardMarkup(new[]
+                                    {
+                                        new [] // first row
+                                        {
+                                          new KeyboardButton("Меню"),
+                                        }
+
+                                    });
+                                    await Bot.SendTextMessageAsync(message.Chat.Id, "Введите название предмета начиная  с *", replyMarkup: keyboard);
+                                }
+                            } break;
                     }
                    // await Bot.SendTextMessageAsync(message.Chat.Id, "Выбран Сайт" + message.Text);
                 }
@@ -444,41 +581,55 @@ namespace Telega
             {
                 try
                 {
-                  //  Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|Количество хороших предметов:"+ DataStruct.GoodItems.Count);
+                    
+                    //  Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|Количество хороших предметов:"+ DataStruct.GoodItems.Count);
                     if (DataStruct.GoodItems.Count > 0)
                     {
-                        var it = DataStruct.GoodItems.Dequeue();
-                        foreach (var item in it.telegram)
+                        for (int i = 0; i < DataStruct.GoodItems.Count; i++)
                         {
-                            if (CheckTemsGood(it.Name, item) == true)
-                            {
-                                long id = GetIdChat(item);
-                                SendMessage(id, it.Site + "\n" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "\n" + it.Name);
-                            }
 
+                            try
+                            {
+                                var it = DataStruct.GoodItems.Dequeue();
+                                foreach (var item in it.telegram)
+                                {
+
+                                    if (CheckTemsGood(it.Name, item,it.Site) == true)
+                                    {
+                                        long id = GetIdChat(item);
+
+                                        SendMessage(id, it.Site + "\n" + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "\n" + it.Name + "\n Price:" + it.Price + "\n Float:" + it.Floaat);
+                                    }
+
+                                }
+                            }
+                            catch (Exception ex) { }
                         }
                     }
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) { Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|:" + ex.Message.ToString()); }
                 Thread.Sleep(300);
             }
         }
-        private static bool CheckTemsGood(string NameItems, string _Telegram)
+        private static bool CheckTemsGood(string NameItems, string _Telegram,string site)
         {
             try
             {
-                var itm = TempGodItems.Find(N => (N.Name == NameItems && N.telegram == _Telegram));
+              //  Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|Вошел с предметом  " + NameItems + "|" + _Telegram);
+                var itm = TempGodItems.Find(N => (N.Name == NameItems && N.telegram == _Telegram && N.Site == site));
                 if (itm == null)
                 {
-                    TempGodItems.Add(new Types.TempGood { Name = NameItems, telegram = _Telegram, DateItems = Convert.ToInt32(DateTime.Now.ToString("HHmm")) });
+                 //   Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|Добавил в ТЕМП "+ NameItems+"|"+ _Telegram);
+                    TempGodItems.Add(new Types.TempGood { Name = NameItems, telegram = _Telegram, DateItems = Convert.ToInt32(DateTime.Now.ToString("HHmm")), Site = site });
                     return true;
                 }
                 else
                 {
                     if (Convert.ToInt32(DateTime.Now.ToString("HHmm")) - itm.DateItems > 1)
                     {
+                   //     Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|Истекло время, Обновил предмет " + NameItems + "|" + _Telegram);
                         TempGodItems.Remove(itm);
-                        TempGodItems.Add(new Types.TempGood { Name = NameItems, telegram = _Telegram, DateItems = Convert.ToInt32(DateTime.Now.ToString("HHmm")) });
+                        TempGodItems.Add(new Types.TempGood { Name = NameItems, telegram = _Telegram, DateItems = Convert.ToInt32(DateTime.Now.ToString("HHmm")), Site = site });
                         return true;
                     }
                     return false;
@@ -508,7 +659,11 @@ namespace Telega
 
         private static async void  SendMessage(long id ,string text) // функция отправки сообщения в телеграм
         {
-            await Bot.SendTextMessageAsync(id, text);
+            try
+            {
+                await Bot.SendTextMessageAsync(id, text);
+            }
+            catch (Exception ex) { Program.Mess.Enqueue(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff") + "--|ОТправка сообщения" + "|" + ex.Message); }
         }
 
         private static void FirstSetUserNameTeleg()//Первая запись юзеров

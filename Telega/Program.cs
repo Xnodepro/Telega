@@ -19,7 +19,7 @@ namespace Telega
             Application.Run(new Form1());
         }
         static public Queue<string> Mess = new Queue<string>();
-        static public Queue<Types.LogInfo> MessLog = new Queue<Types.LogInfo>();
+        static public List<Types.LogInfo> MessLog = new List<Types.LogInfo>();
         public static string CapchaUrl = "";
     }
 }
